@@ -25,6 +25,7 @@ import boto.sqs
 import boto.sqs.jsonmessage
 import boto.s3.connection
 import boto.exception
+from boto.sqs.message import RawMessage
 
 import logging
 from taaws.log import setup_logger
@@ -212,7 +213,8 @@ class MyScript(smi.Script):
                             self.input_items['sqs_queue']))
                         raise
 
-                sqs_queue.set_message_class(boto.sqs.message.RawMessage)
+                #sqs_queue.set_message_class(boto.sqs.message.RawMessage)
+                sqs_queue.set_message_class(RawMessage)
 
                 # num_messages=10 was chosen based on aws pricing faq.
                 # see request batch pricing: http://aws.amazon.com/sqs/pricing/
@@ -237,41 +239,36 @@ class MyScript(smi.Script):
                     if self._canceled:
                         break
                     try:
-                        envelope = json.loads(notification.get_body())
-			type = json.loads(envelope.get('Type',''))
-                        message = json.loads(envelope.get('Message',''))
-
+ 			message = notification.get_body()
                         ## Process: config notifications, history and snapshot notifications (additional)
 
-                        # Process pass notifications with payload, check EventType
-                        #if message.get('Type', '') == 'Notification':
-                        if type.get('Type', '') == 'Notification':
+                        # Process pass notifications with payload, check status
+                        if notification.message('EventType', '') == 'CloudSecGroupChangesDetectedEvent':
                             logger.log(logging.DEBUG, "Consuming configuration change data in SQS payload.")
                             # determine _time for the event
-			    FriendlyType = message.get('FriendlyType', '')
-			    InstanceType = message.get('InstanceType','')
-			    CurrentState = message.get('CurrentState','')
+			    Dome9GroupId = notification.message('Dome9GroupId', '')
                             # write the event
-                            event = smi.Event(data=json.dumps(message),
+                            event = smi.Event(data=notification.message(message),
                                           time=time.time(),
                                           source="aws:dome9:notification")
                             ew.write_event(event)
                             stats['written'] += 1
                             completed.append(notification)
 
-			# Process fail notifications with payload, check EventType
-                        #elif message.get('EventType', '') == 'CloudSecGroupChangesDetectedEvent':
+			# Process fail notifications with payload, check status
+                        #elif message.get('status', '') == 'fail':
                         #    logger.log(logging.DEBUG, "Consuming configuration change data in SQS payload.")
-                        #    # determine _time for the event
-                        #    FriendlyType = message.get('FriendlyType', '')
-                        #    ExtraData = message.get('ExtraData','')
-                        #    # write the event
-                        #    event = smi.Event(data=json.dumps(message),
-                        #                  time=time.time(),
-                        #                  source="aws:dome9:notification")
-                        #    ew.write_event(event)
-                        #    stats['written'] += 1
-                        #    completed.append(notification)
+                         #   # determine _time for the event
+                          #  risk_level = message.get('risk_level', '')
+                           # signature = message.get('signature','')
+                           # description = message.get('description','')
+                           # # write the event
+                           # event = smi.Event(data=json.dumps(message),
+                                         # time=time.time(),
+                                         # source="aws:dome9:notification")
+                           # ew.write_event(event)
+                           # stats['written'] += 1
+                           # completed.append(notification)
 
                         else:
                             logger.log(logging.ERROR, "None of the notification satisfy capture conditions for AWS Dome9.")

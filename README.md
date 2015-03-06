@@ -1,7 +1,7 @@
 # Splunk_TA_dome9
-Splunk Technology Add-on for Evident.io
+Splunk Technology Add-on for Dome9
 
-This Technology Add-on (TA) is for people who have an account with Evident.io (http://www.evident.io) and want to gather their alerts into their Splunk instance.  This TA requires both the Splunk App for AWS (https://apps.splunk.com/app/1274/) AND the Splunk Add-on for Amazon Web Services (https://apps.splunk.com/app/1876/). 
+This Technology Add-on (TA) is for people who have an account with dome9 (http://www.dome9.com) and want to gather their alerts into their Splunk instance.  This TA requires both the Splunk App for AWS (https://apps.splunk.com/app/1274/) AND the Splunk Add-on for Amazon Web Services (https://apps.splunk.com/app/1876/). 
 
 Here's a list of files that are added to your $SPLUNK_HOME/etc/apps/Splunk_TA_aws folder:
 bin/aws_dome9.py
@@ -20,7 +20,7 @@ If you need to make any changes to the TA, make sure to just copy the aws_dome9.
 props.conf
 -------------
     ##################################
-    ###         AWS Evidentio      ###
+    ###         AWS dome9      ###
     ##################################
     [aws:dome9]
     SHOULD_LINEMERGE = false
@@ -28,7 +28,7 @@ props.conf
     TIME_PREFIX = \"eventTime\"\s*\:\s*\"
     TIME_FORMAT = %Y-%m-%dT%H:%M:%S%Z
     MAX_TIMESTAMP_LOOKAHEAD = 28
-    KV_MODE = json
+
     
     # Notifications/Diff Payloads
     [source::aws:dome9:notification]

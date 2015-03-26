@@ -26,11 +26,7 @@ def log_enter_exit(func):
         return result
     return wrapper
 
-DATA_INPUTS=['aws_billing',
-      'aws_cloudtrail',
-      'aws_cloudwatch',
-      'aws_config',
-      'aws_s3',
+DATA_INPUTS=['aws_dome9',
       ]
 
 class ConfigHandler(splunk.admin.MConfigHandler):

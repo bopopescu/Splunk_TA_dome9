@@ -1,0 +1,10 @@
+<nav search_view="search" color="#79ceb8">
+  <collection label="Setup">
+  <a href="/manager/Splunk_TA_dome9/apps/local/Splunk_TA_dome9/setup?action=edit">Step 1 - Setup AWS Details</a>
+  <a href="/manager/search/data/inputs/aws_dome9">Step 2 - Setup Dome9 Splunk Input</a>
+  </collection>
+  <view name="search" />
+  <a href="/app/splunk_app_dome9">Evident.io App for Splunk</a>
+  <a href="https://github.com/amiracle/Splunk_TA_dome9">Help</a>
+  <a href="https://secure.dome9.com/account/logon">Dome9 Login</a>
+</nav>
